@@ -261,7 +261,9 @@ class Cell:
 
 def go():
     while 1:
+        # it was created to make cool wallpaper
         # there is an issue if you want to show only image and set draw_wallpaper as False
+        # I made it only for wallpaper so I don`t care about this issue
         maze = Maze(draw_wallpaper=True)
         maze.dijkstra()
 
