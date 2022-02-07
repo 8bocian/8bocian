@@ -4,11 +4,15 @@
 import numpy as np
 from collections import Counter
 
+
 def euclideanDistance(x1, x2):
-    return np.sqrt(np.sum(x1 - x2)**2)
+    return np.sqrt(np.sum(x1 - x2) ** 2)
+
 
 class KNN:
     def __init__(self, k=3):
+        self.X_train = None
+        self.y_train = None
         self.k = k
 
     def fit(self, X, y):
