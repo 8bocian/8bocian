@@ -5,20 +5,23 @@ import colorsys
 from math import sin, cos
 import numpy as np
 import pygame as pg
+import ctypes
 
 def run():
     # stop = 1500 because of performance dropout when number of points exceeds ~1500
     stop = 1500
-    WIDTH, HEIGHT = 1920, 1080
+    user32 = ctypes.windll.user32
+    WIDTH = user32.GetSystemMetrics(78)
+    HEIGHT = user32.GetSystemMetrics(79)
     BLACK = (0, 0, 0)
     FPS = 60
 
     x = 0.01
     y = 0.01
     z = 0.01
-    a = 10
-    b = 28 # put 13 as b instead of 28 to change attractor
-    c = 8 / 3
+    sigma = 10
+    rho = 28 # put 13 as rho instead of 28 to change attractor
+    beta = 8 / 3
     angle = 0
     points = [[[0], [0], [0]]]
     scale = 15
@@ -66,9 +69,9 @@ def run():
         if len(points) <= stop:
             dt = 0.01
 
-            dx = (a * (y - x)) * dt
-            dy = (x * (b - z) - y) * dt
-            dz = (x * y - c * z) * dt
+            dx = (sigma * (y - x)) * dt
+            dy = (x * (rho - z) - y) * dt
+            dz = (x * y - beta * z) * dt
 
             x = x + dx
             y = y + dy
