@@ -4,7 +4,7 @@
 from cv2 import cv2
 import numpy as np
 
-def opticalFlow(capture_src=0, step=16):
+def showOpticalFlow(capture_src=0, step=16):
     cap = cv2.VideoCapture(capture_src)
 
     _, image = cap.read()
