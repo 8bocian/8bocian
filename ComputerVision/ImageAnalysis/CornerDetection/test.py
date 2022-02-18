@@ -4,7 +4,8 @@
 from cv2 import cv2
 from CornerDetector import harrisCorners
 
-image = cv2.imread('../Images/EmpireState/image3.jpg')
+path = ""
+image = cv2.imread(path)
 image = harrisCorners(image)
 cv2.imshow('Image', image)
 cv2.waitKey(0)
