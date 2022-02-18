@@ -5,7 +5,8 @@ from cv2 import cv2
 from SobelFilter import sobelFiltering
 from GaussianFilter import gaussianFilter
 
-image = cv2.imread("../Images/EmpireState/image4.jpg")
+path = ""
+image = cv2.imread(path)
 image_gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
 
 sobel_image = sobelFiltering(image_gray)
