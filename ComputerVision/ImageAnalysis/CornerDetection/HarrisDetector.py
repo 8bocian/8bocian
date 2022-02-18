@@ -14,5 +14,4 @@ def harrisCorners(image, block_size=2, k_size=5, k=0.1, threshold=0.01, iters=2,
 
     image[dst > threshold * dst.max()] = corner_color
 
-    cv2.imshow('Image', image)
-    cv2.waitKey(0)
+    return image
