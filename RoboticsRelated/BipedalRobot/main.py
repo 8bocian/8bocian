@@ -29,4 +29,4 @@ for episode in range(n_episodes):
             break
     print(f"Episode: {episode}\nScore: {np.mean(score):.3f}")
     env.reset()
-p.disconnect()
+env.close()
