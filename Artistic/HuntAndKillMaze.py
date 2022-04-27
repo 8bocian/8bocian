@@ -9,28 +9,43 @@ import time
 import os
 
 
+
+
 class Maze:
-    def __init__(self, x=None, y=None, slow=0, draw_wallpaper=False):
+    def __init__(self, x=None, y=None, sleep=0):
         self.step = self.time = self.iter = 0
-        self.sleep = slow
+        
+        # slow down our entity
+        self.sleep = sleep
         self.width_wall = -1
+        
+        # size of our cell
         self.size = 10
+        
+        # check if we provided height and length of our maze
         if x is None:
             x = WIDTH / self.size
         if y is None:
             y = HEIGHT / self.size
         self.rows = int(y)
         self.cols = int(x)
+        
+        # construct our maze grid
         self.maze = [[Cell(position=(r, c)) for c in range(self.cols)] for r in range(self.rows)]
         self.path = self.solution = []
+        
+        # initiate colours
         self.WHITE = (255, 255, 255)
         self.BLACK = (0, 0, 0)
         self.ENTITY = (255, 0, 0)
         self.SOLVER = (75, 0, 150)
         self.CHANGE = (0, 230, 0)
+        
+        # create our base image for maze visualization
         self.image = np.zeros(shape=[HEIGHT, WIDTH, 4], dtype=np.uint8)
         self.wallpaper_path = os.getcwd()
-        self.draw_wallpaper = draw_wallpaper
+        
+        # create maze according to Hunt and Kill algorithm
         self.createMaze()
 
     def createMaze(self):
@@ -40,19 +55,15 @@ class Maze:
                     self.move(cell.position)
 
     def move(self, currCell):
-        has, direction, nextCell = self.hasNeighbours(self.maze[currCell[0]][currCell[1]])
+        hasNeighbour, direction, nextCell = self.hasNeighbours(self.maze[currCell[0]][currCell[1]])
         if self.maze[currCell[0]][currCell[1]].status:
             self.maze[currCell[0]][currCell[1]].color = self.CHANGE
             self.draw_move(currCell)
-            if self.draw_wallpaper:
-                self.wallpaper()
-            else:
-                if self.iter == 0:
-                    cv2.namedWindow('Maze', cv2.WND_PROP_FULLSCREEN)
-                    cv2.setWindowProperty('Maze', cv2.WND_PROP_FULLSCREEN, cv2.WINDOW_FULLSCREEN)
-                cv2.imshow('Maze', self.image)
+            self.change_wallpaper()
             self.maze[currCell[0]][currCell[1]].status = False
         self.time += 1
+
+        # change the color of the maze fill
         if self.time % 80 == 0:
             if self.CHANGE[1] < 255 and self.step == 0:
                 self.CHANGE = (0, self.CHANGE[1] + 1, self.CHANGE[2])
@@ -65,7 +76,10 @@ class Maze:
             if self.CHANGE[1] > 0 and self.step == 2:
                 self.CHANGE = (0, self.CHANGE[1] - 1, self.CHANGE[2])
             self.time = 0
-        if has:
+
+        # delete walls of the cell by checking the next transition of our entity
+        # e.g. bottom wall of the cell where out entity is now is the upper wall of the cell where out entity will be in the next iteration
+        if hasNeighbour:
             self.maze[currCell[0]][currCell[1]].walls[direction] = 0
             if direction == 1:
                 direction = 3
@@ -79,34 +93,37 @@ class Maze:
             self.move(nextCell)
 
     def hasNeighbours(self, cell):
+        # r-row
+        # c-column
         r = cell.position[0]
         c = cell.position[1]
         neighbours = []
         direction = []
 
-        if r < self.rows - 1:
-            if self.maze[r + 1][c].status:
+        # check the status of neighbouring cells if they exist
+        if r < self.rows - 1 and self.maze[r + 1][c].status:
                 neighbours.append((r + 1, c))
                 direction.append(2)
-        if c < self.cols - 1:
-            if self.maze[r][c + 1].status:
+        if c < self.cols - 1 and self.maze[r][c + 1].status:
                 neighbours.append((r, c + 1))
                 direction.append(1)
+
+        # check the status of neighbouring cells
         if self.maze[r - 1][c].status and r != 0:
             neighbours.append((r - 1, c))
             direction.append(0)
         if self.maze[r][c - 1].status and c != 0:
             neighbours.append((r, c - 1))
             direction.append(3)
-        if len(neighbours) >= 1:
 
+        # if there are neighbours then move and don't reset the run
+        if len(neighbours) >= 1:
             randomDirection = rm.randint(0, len(neighbours)) - 1
             return True, direction[randomDirection], neighbours[randomDirection]
-
         else:
             return False, None, None
 
-    def dijkstra(self, start=None, end=None):
+    def solve_and_show(self, start=None, end=None):
         if start is None:
             start = (0, 0)
         if end is None:
@@ -115,6 +132,7 @@ class Maze:
         self.draw_path()
 
     def solve(self, start, end):
+        # dijkstra algorithm implementation
         unvisited = {}
         for row in self.maze:
             for cell in row:
@@ -157,6 +175,7 @@ class Maze:
         self.solution = revPathList[::-1]
 
     def draw_move(self, cell_position):
+        # draw move of our entity
         self.path.append((cell_position[0], cell_position[1]))
         self.maze[cell_position[0]][cell_position[1]].color = self.CHANGE
         self.draw_entity(self.maze[cell_position[0]][cell_position[1]], self.CHANGE)
@@ -164,6 +183,7 @@ class Maze:
         time.sleep(self.sleep)
 
     def draw_cell(self, cell, color, entity=False):
+        # in the future, this will be converted to a smaller size by creating functions for repetitive code
         r, c = cell.position[0], cell.position[1]
         pvColor = co = color
         if cell.walls[0] == 1:
@@ -231,8 +251,7 @@ class Maze:
             self.maze[step[0]][step[1]].color = self.SOLVER
             self.draw_entity(self.maze[step[0]][step[1]], self.SOLVER)
             self.draw_cell(self.maze[step[0]][step[1]], self.maze[step[0]][step[1]].color, True)
-            if self.draw_wallpaper:
-                self.wallpaper()
+            self.change_wallpaper()
 
     def draw_entity(self, cell, color):
         r, c = cell.position[0], cell.position[1]
@@ -242,7 +261,7 @@ class Maze:
                       color,
                       thickness=-1)
 
-    def wallpaper(self):
+    def change_wallpaper(self):
         cv2.imwrite(f'{self.wallpaper_path}\window.png', self.image)
         path = self.wallpaper_path + r'\window.png'
         ctypes.windll.user32.SystemParametersInfoW(20, 0, path, 3)
@@ -261,11 +280,8 @@ class Cell:
 
 def go():
     while 1:
-        # it was created to make cool wallpaper
-        # there is an issue if you want to show only image and set draw_wallpaper as False
-        # I made it only for wallpaper so I don`t care about this issue
-        maze = Maze(draw_wallpaper=True)
-        maze.dijkstra()
+        maze = Maze()
+        maze.solve_and_show()
 
 
 if __name__ == "__main__":
