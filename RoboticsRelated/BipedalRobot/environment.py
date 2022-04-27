@@ -24,7 +24,9 @@ class WalkerEnv(Env):
         client_id = p.connect(method)
         p.setAdditionalSearchPath(pd.getDataPath())
         p.setGravity(0, 0, -9.8)
-        p.setRealTimeSimulation(1)
+
+        # time needs a small adjustment
+        p.setTimeStep(0.0001)
         plane_id = p.loadURDF('plane.urdf')
         self.start_position = [0, 0, -0.4]
         self.start_rotation = [0, 0, 0, 1]
@@ -52,11 +54,12 @@ class WalkerEnv(Env):
 
         ###############################################
 
-    def step(self, action):
+    def step(self, action=None):
         # apply action
-        p.setJointMotorControlArray(self.object_id, [i for i in range(self.n_joints)], p.POSITION_CONTROL, action)
+        if action is not None:
+            p.setJointMotorControlArray(self.object_id, [i for i in range(self.n_joints)], p.POSITION_CONTROL, action)
         p.stepSimulation()
-        
+
         # generate observation
         multi_joints_or = np.array(
             [p.getJointStateMultiDof(self.object_id, idx)[0] for idx in self.multi_dof_joints]).flatten()
@@ -65,7 +68,7 @@ class WalkerEnv(Env):
         self.position = p.getBasePositionAndOrientation(self.object_id)[0]
 
         observation = np.concatenate([multi_joints_or, rev_joints_or, self.position], dtype=np.float32)
-        
+
         # calculate reward
         # this will be changed to better suit our environment
         reward = -(self.position[0] ** 2) + (2 * self.position[1]) ** 2 - ((self.position[2] - 0.4) ** 2)
