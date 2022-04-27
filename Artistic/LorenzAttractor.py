@@ -8,20 +8,23 @@ import pygame as pg
 import ctypes
 
 def run():
-    # stop = 1500 because of performance dropout when number of points exceeds ~1500
+    # only calculate 1500 iterations to maintain good performance
     stop = 1500
     user32 = ctypes.windll.user32
     WIDTH = user32.GetSystemMetrics(78)
     HEIGHT = user32.GetSystemMetrics(79)
     BLACK = (0, 0, 0)
-    FPS = 60
+    FPS = 30
 
     x = 0.01
     y = 0.01
     z = 0.01
+
+    # those are values that don't cause the equation to tend to infinity
     sigma = 10
-    rho = 28 # put 13 as rho instead of 28 to change attractor
+    rho = 28
     beta = 8 / 3
+
     angle = 0
     points = [[[0], [0], [0]]]
     scale = 15
@@ -40,7 +43,7 @@ def run():
         [0, 1, 0]
     ])
 
-    while 1:
+    while len(points) <= stop:
         clock.tick(FPS)
         screen.fill(BLACK)
 
@@ -104,4 +107,5 @@ def run():
                 quit()
 
 if __name__ == "__main__":
-    run()
+    while 1:
+        run()
