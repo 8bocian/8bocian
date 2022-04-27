@@ -1,6 +1,6 @@
 - 👋 Hi, I’m @8bocian
-- 👀 I’m interested in DeepLearning, MachineLearning, and simulations
-- 🌱 I’m currently learning Python, Java, Neural Networks, simulations of evnironments and abstract things like BOIDS simulations, Lorenz attractor and 4D projections
+- 👀 I’m interested in Deep Learning, Machine Learning, Reinforcement Learning
+- 🌱 I’m currently learning Python, ML, RL, DL
 - 💞️ I’m looking to collaborate on anything
 - 📫 How to reach me oskar.mozdzen@gmail.com
 
