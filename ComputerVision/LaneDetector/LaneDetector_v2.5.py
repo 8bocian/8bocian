@@ -167,7 +167,7 @@ def main(path):
 
 if __name__ == '__main__':
     global image_height, image_width, n_channels_in_image, roi_upper_left_corner, roi_upper_right_corner, roi, transform_roi
-    path1 = r'Data/Videos/1.mp4'
-    path2 = r'Data/Videos/2.mp4'
-    path3 = r'Data/Videos/3.mp4'
+    path1 = r'Videos/1.mp4'
+    path2 = r'Videos/2.mp4'
+    path3 = r'Videos/3.mp4'
     main(path3)
