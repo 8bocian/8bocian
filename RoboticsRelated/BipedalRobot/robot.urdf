@@ -1,0 +1,231 @@
+<robot name="walker">
+
+	<material name="white">
+		<color rgba="1 1 1 1"/>
+	</material>
+
+	<material name="black">
+		<color rgba="0.2 0.2 0.2 1"/>
+	</material>
+
+	<material name="blue">
+		<color rgba="0 0 1 1"/>
+	</material>
+	
+	<material name="red">
+		<color rgba="1 0 0 1"/>
+	</material>
+
+	<link name="base">
+		<visual>
+			<geometry>
+				<box size="0.3 0.1 0.1"/>
+			</geometry>
+			<origin xyz="0.0 0.0 1.0"/>
+		</visual>	
+		
+		<inertial>
+			<origin rpy="0 0 0" xyz="0.0 0.0 1.0"/>
+			<mass value="0.1"/>
+			<inertia ixx="0.02" ixy="0.0" ixz="0.0" iyy="0.1" iyz="0.0" izz="0.1"/>
+		</inertial>
+		
+		<collision>
+			<origin rpy="0 0 0" xyz="0.0 0.0 1.0"/>
+			<geometry>
+				<box size="0.3 0.1 0.1"/>
+			</geometry>
+		</collision>
+	</link>
+		
+	<joint name="base2left_femur_xy" type="revolute">
+		<limit effort="10.0" velocity="5.45" lower="-1.57" upper="1.57"/>
+		<dynamics friction="3.43"/>
+		<parent link="base"/>
+		<child link="left_femur"/>
+		<axis xyz="1 0 0"/>
+		<origin xyz="-0.15 0 1"/>
+	</joint>
+	
+	<joint name="base2right_femur_xy" type="revolute">
+		<limit effort="10.0" velocity="5.45" lower="-1.57" upper="1.57"/>
+		<dynamics friction="3.43"/>
+		<parent link="base"/>
+		<child link="right_femur"/>
+		<axis xyz="1 0 0"/>
+		<origin xyz="0.15 0 1"/>
+	</joint>
+
+	<link name="left_femur">
+		<visual>
+			<geometry>
+				<box size="0.1 0.1 0.3"/>
+			</geometry>
+			<origin xyz="0 0 -0.15"/>
+			<material name="blue"/>
+		</visual>
+		
+		<collision>
+			<geometry>
+				<box size="0.1 0.1 0.3"/>
+			</geometry>
+			<origin xyz="0 0 -0.15"/>
+		</collision>
+
+		<inertial>
+			<origin xyz="0 0 -0.15"/>
+			<mass value="0.1"/>
+			<inertia ixx="0.02" ixy="0.0" ixz="0.0" iyy="0.1" iyz="0.0" izz="0.1"/>
+		</inertial>
+	</link>
+	
+	<link name="right_femur">
+		<visual>
+			<geometry>
+				<box size="0.1 0.1 0.3"/>
+			</geometry>
+			<origin xyz="0 0 -0.15"/>
+			<material name="blue"/>
+		</visual>
+		
+		<collision>
+			<geometry>
+				<box size="0.1 0.1 0.3"/>
+			</geometry>
+			<origin xyz="0 0 -0.15"/>
+		</collision>
+		
+		<inertial>
+			<origin xyz="0 0 -0.15"/>
+			<mass value="0.1"/>
+			<inertia ixx="0.02" ixy="0.0" ixz="0.0" iyy="0.1" iyz="0.0" izz="0.1"/>
+		</inertial>
+	</link>
+	
+	<joint name="left_femur2left_tibia_x" type="revolute">
+		<limit effort="10.0" velocity="5.45" lower="-1.57" upper="1.57"/>
+		<dynamics friction="3.43"/>
+		<parent link="left_femur"/>
+		<child link="left_tibia"/>
+		<axis xyz="1 0 0"/>
+		<origin xyz="0 0 -0.3"/>
+	</joint>
+	
+	<joint name="right_femur2right_tibia_x" type="revolute">
+		<limit effort="10.0" velocity="5.45" lower="-1.57" upper="1.57"/>
+		<dynamics friction="3.43"/>
+		<parent link="right_femur"/>
+		<child link="right_tibia"/>
+		<axis xyz="1 0 0"/>
+		<origin xyz="0 0 -0.3"/>
+	</joint>
+	
+	<link name="left_tibia">
+		<visual>
+			<geometry>
+				<box size="0.1 0.1 0.3"/>
+			</geometry>
+			<origin xyz="0 0 -0.15"/>
+			<material name="red"/>
+		</visual>
+		
+		<collision>
+			<geometry>
+				<box size="0.1 0.1 0.3"/>
+			</geometry>
+			<origin xyz="0 0 -0.15"/>
+		</collision>
+
+		<inertial>
+			<origin xyz="0 0 -0.15"/>
+			<mass value="0.1"/>
+			<dynamics friction="3.43"/>
+			<inertia ixx="0.02" ixy="0.0" ixz="0.0" iyy="0.1" iyz="0.0" izz="0.1"/>
+		</inertial>
+	</link>
+	
+	<link name="right_tibia">
+		<visual>
+			<geometry>
+				<box size="0.1 0.1 0.3"/>
+			</geometry>
+			<origin xyz="0 0 -0.15"/>
+			<material name="red"/>
+		</visual>
+		
+		<collision>
+			<geometry>
+				<box size="0.1 0.1 0.3"/>
+			</geometry>
+			<origin xyz="0 0 -0.15"/>
+		</collision>
+		
+		<inertial>
+			<origin xyz="0 0 -0.15"/>
+			<mass value="0.1"/>
+			<inertia ixx="0.02" ixy="0.0" ixz="0.0" iyy="0.1" iyz="0.0" izz="0.1"/>
+		</inertial>
+	</link>
+	
+	<joint name="left_tibia2left_foot" type="spherical">
+		<limit effort="0.0" velocity="5.45" lower="-1.57" upper="1.57"/>
+		<parent link="left_tibia"/>
+		<child link="left_foot"/>
+		<axis xyz="0 1 0"/>
+		<origin xyz="0 0 -0.38"/>
+	</joint>
+	
+	<joint name="right_tibia2right_foot" type="spherical">
+		<limit effort="0.0" velocity="5.45" lower="-1.57" upper="1.57"/>
+		<parent link="right_tibia"/>
+		<child link="right_foot"/>
+		<axis xyz="0 1 0"/>
+		<origin xyz="0 0 -0.38"/>
+	</joint>
+	
+	<link name="left_foot">
+		<visual>
+			<geometry>
+				<cylinder radius="0.07" length="0.02"/>
+			</geometry>
+			<origin xyz="0 0 0"/>
+		</visual>
+		
+		<collision>
+			<geometry>
+				<cylinder radius="0.07" length="0.02"/>
+			</geometry>
+			<origin xyz="0 0 0"/>
+		</collision>
+		
+		<inertial>
+			<origin xyz="0 0 0"/>
+			<mass value="0.1"/>
+			<inertia ixx="0.02" ixy="0.0" ixz="0.0" iyy="0.1" iyz="0.0" izz="0.1"/>
+		</inertial>
+	</link>
+	
+	<link name="right_foot">
+		<visual>
+			<geometry>
+				<cylinder radius="0.07" length="0.02"/>
+			</geometry>
+			<origin xyz="0 0 0"/>
+		</visual>
+
+		<collision>
+			<geometry>
+				<cylinder radius="0.07" length="0.02"/>
+			</geometry>
+			<origin xyz="0 0 0"/>
+		</collision>
+		
+		<inertial>
+			<origin xyz="0 0 0"/>
+			<mass value="0.1"/>
+			<inertia ixx="0.02" ixy="0.0" ixz="0.0" iyy="0.1" iyz="0.0" izz="0.1"/>
+		</inertial>
+	
+	</link>
+	
+</robot>
