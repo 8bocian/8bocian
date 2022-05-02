@@ -3,7 +3,7 @@
 
 import tensorflow as tf
 import numpy as np
-from network import PolicyNetwork, CriticNetwork
+from networks import PolicyNetwork, CriticNetwork
 from tensorflow.keras.optimizers import Adam
 import tensorflow.keras as keras
 from memory import PPOMemory
